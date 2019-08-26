@@ -1,0 +1,289 @@
+*{
+    box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+a{
+  /* color:#5E5E5E !important; */
+  color:#333333 !important;
+}
+
+/* Change input box focus syle */ 
+.form-control:focus {
+        border-color: #1abc9c;
+        box-shadow: 0px 1px 1px #1abc9c;
+    }
+
+.btn{
+     border-radius: 100px !important;
+     background-color: #1abc9c !important;
+     border-color: #1abc9c !important;
+     margin-bottom:20px;
+     margin-top:20px;
+
+}
+.btn:focus,.btn:active {
+   /* outline: none !important; */
+   outline: rgb(26,200,156) !important;
+
+   box-shadow: none !important;
+   /* box-shadow: 3px 3px 3px #1abc9c !important; */
+}
+.btn:hover{
+    background-color: rgb(20,150,136) !important;
+}
+
+.container-fluid {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+
+.card-column, .row{
+        padding:0;
+        /* width: 100%;
+        margin: auto; */
+    }
+
+.content{
+    width:75%;
+    margin:0 auto;
+}
+
+.details-container{
+        width:80%;
+        margin:auto;
+    }
+
+.vertical-menu {
+    width: 200px;
+    float: left;
+    margin-top: 70px;
+    background-color:white;
+    margin-right:50px;
+    /* display:inline-block; */
+}
+
+.vertical-menu a {
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #393e46;
+    color: white !important;
+}
+
+.short-card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    min-width:18rem;
+}
+
+.short-card-header{
+    /* background-color: #00adb5; */  
+    background-color: #1abc9c !important;
+    /* background-color: #00818a !important; */
+}
+
+.short-card-body{
+    padding-top: 0;
+}
+
+.big-card{
+    margin:50px auto;
+}
+
+.big-card-body{
+    margin:20px;
+}
+
+.list-group-item{
+     color: black;
+}
+
+.list-group-item:hover{
+    background-color: #ccc;
+    color:black;
+}
+
+
+
+/* Footer styling  */
+#footer{
+    background-color: #1abc9c !important;
+}
+
+#footer hr{
+    margin-top: 100px;
+}
+
+#footer-note{
+    text-align: center;
+    margin:0;
+    padding:20px;
+    color: #F5F5F5 !important;
+}
+
+.footer-links{
+    flex-direction: row;
+    text-align:center;
+    margin:30px auto !important;
+    padding-top:50px;
+}
+
+.footer-links a{
+    text-decoration:none;
+    margin:0 10px;
+    font-size:1rem;
+    color:#F5F5F5 !important;
+
+}
+.footer-links a:hover{
+    color: white !important;
+}
+
+.wrapper {
+  min-height: 100%;
+  margin-bottom: -50px;
+}
+
+.push {
+  height: 50px;
+}
+
+/* ***************************************** */
+
+/* Header Sytling */
+
+.navbar-brand:hover {
+  transform: scale(1.02); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.navbar-brand{
+  color:#5E5E5E !important;
+  font-family: 'Nova Mono', monospace;
+  font-size: 30px;
+  /* margin-left:100px; */
+  padding-left:0;
+}
+
+.container-fluid {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.navbar {
+  padding : 30px;
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 50px;
+  letter-spacing: 5px;
+}
+
+.navbar-nav li a:hover {
+  color: #1abc9c !important;
+}
+.navbar-nav li a {
+  /* color: #1abc9c !important; */
+  font-size: 1.2rem;
+  color:#5E5E5E !important;
+  font-family: 'Nova Mono', monospace;
+  letter-spacing: normal;
+  
+
+}
+
+/*.navbar-nav{
+  color: #1abc9c !important;
+  float:right;
+  postition: relative;
+}
+*/
+
+
+/* ********************************************** */
+
+/* Form Sytling */
+/* form{ */
+        /* width : 400px; */
+        /* margin : 10px auto; */
+            /* padding-bootom: 0; */
+    /* } */
+#inputUsername,#inputEmail,#inputPassword{
+    /* padding: 40px auto; */
+    height:60px;
+}
+/* ******************************************** */
+
+.input-form{
+    max-width:600px;
+    margin:auto;
+    
+
+}
+
+
+.description-content{
+    min-height: 500px;
+    padding: 10px !important;
+}
+.description-content .card-text{
+    text-align: left;
+}
+
+ #messages{height:300px;}
+        .scroll{
+            overflow-y: scroll;
+        }
+
+@media only screen and (max-width: 700px) {
+    .vertical-menu{
+        width:0px;
+        display:none;
+        margin:0;
+    }
+    .card-body,.card-column, .row{
+        padding:0;
+        /* margin: auto !important; */
+    }
+    .container-fluid{
+        /* margin-left:0 !important; */
+        padding:0;
+
+    }
+    .card-column{
+        margin:20px 0;
+    }
+    .content{
+        width:87%;
+        /* margin-right:10%; */
+        margin:auto;
+    }
+    .details-container{
+        width:97%;
+        margin:auto;
+    }
+    .details-container .row{
+        margin:0;
+    }
+
+    .description-col{
+        padding:30px 0;
+    }
+    .big-card{
+        margin:50px auto;
+        width: 97%;
+
+    }
+}

@@ -1,0 +1,65 @@
+<%- include('partials/header') -%>
+<div class = "details-container container-fluid">
+<div class = " row">
+    <div class = "description-col col-lg-8" style ="float:left;">
+        <div class="card text-center">
+            <div class="card-header">
+                <%=adData.category%> - <%=adData.subcategory%>
+            </div>
+            <div class="description-content card-body">
+                <h5 class="card-title"><%=adData.title%></h5>
+                <p class="card-text"><%=adData.description%></p>
+            </div>
+            <div class="card-footer text-muted">
+                <!-- 2 days ago -->
+                <p>Posted by <%=userData.username%></p>
+                <p>Email: <%=userData.email%></p>
+                <p>Phone no:  <%=adData.phno%></p>
+                <p>Address:  <%=adData.address%></p>
+            </div>
+        </div>
+    </div>
+   
+     <div class="description-col col-lg-4">
+        <form method = "post" action = "/ad/details">
+                <h1 class="text-center">
+                    Chat 
+                    <% if(userId == adData.userId){ %>
+                        <button type = "submit"  id="clear" class="btn btn-danger" value = "no" name = clear onclick = toggleClear();>Clear</button>  
+                    <% }else{ %>
+                        <button  style="display:none;" id="clear" class="btn btn-danger" value = "no">Clear</button>  
+                    <%} %>  
+                </h1>
+                
+                <div id="status"></div>
+                <div id="chat">
+               
+                    <input type="hidden" id="chatData" name="chatData" value="<%=chatData%>">
+                    <input type="hidden" id="username" name="username" value="<%=name%>">
+                    <input type="hidden" id="adID" name = "adID" value = "<%=adData.id%>">
+
+                    <!-- <input type="text" id="username" name = "username" class="form-control" placeholder="Enter name..."> -->
+                    <br>
+                    <div class="card scroll">
+                        <div id="messages" class="card-block">
+                        <% if (chatData != null){  %>
+                            <% chatData.allchats.forEach(element => { %>
+                            <div class = "chat-message"><%=element.name%>: <%=element.message%></div>
+                                
+                          <%  });   %>
+                       <% }  %>
+                        
+                        </div>
+                    </div>
+                    <br>
+                    <textarea id="textarea" class="form-control" name = "message" placeholder="Enter message..."></textarea>
+                </div>
+                <button type = "submit" id = "send" class="btn btn-primary" >Send</button>
+
+            </div>
+            </div>
+    </div>
+    </form>
+</div>
+<%- include('partials/footer') -%>
+ 

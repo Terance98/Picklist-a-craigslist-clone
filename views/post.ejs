@@ -1,0 +1,44 @@
+<%- include('partials/header') -%>
+
+    <form class="details-container input-form" method="POST" action="/post">
+        <div class="form-group">
+            <label for="phon">Phone number</label>
+            <input type="number" required="required" class="form-control" name="phno" id="phno"
+                placeholder="Phone number">
+        </div>
+        <div class="form-group">
+            <label for="category">Choose category</label>
+            <select class="form-control" onClick="GetSelectedItem('category');" required="required" id="category"
+                name="category">
+                <option>Community</option>
+                <option>Services</option>
+                <option>For sale</option>
+                <option>Housing</option>
+                <option>Jobs</option>
+                <option>Temp jobs</option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="subcategory">Choose subcategory</label>
+            <select class="form-control" onClick="GetSelectedItem('subcategory');" required="required" id="subcategory"
+                name="subcategory">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <textarea class="form-control" required="required" id="title" name="title" rows="1"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="description">Brief Description</label>
+            <textarea class="form-control" required="required" id="description" name="description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea class="form-control" required="required" id="address" name="address" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    </form>
+
+<%- include('partials/footer') -%>

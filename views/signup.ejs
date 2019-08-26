@@ -1,0 +1,15 @@
+
+<%- include('partials/header') -%>
+
+  <body class="text-center">
+    <form class="form-signin details-container input-form" method = "post" action = "/signup">
+      <input type="text" class="form-control" id="inputUsername" placeholder="Username" name = "username" required autofocus>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" name = "emailid" >
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" name= "password" required>
+      <br>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    </form>
+  </body>
+</html>
+
+<%- include('partials/footer') -%>

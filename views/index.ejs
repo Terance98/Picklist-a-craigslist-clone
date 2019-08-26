@@ -1,0 +1,41 @@
+<%- include('partials/header') -%>
+    <div class="page">
+    <div class = "content">
+    <div class="vertical-menu">
+        <a href="/" class="active">Home</a>
+        <a href="/about">About</a>
+        <a href="/services">Services</a>
+        <a href="/contact_us"">Contact Us</a>
+        <a href="/signup">Sign up</a>
+    </div>
+
+        <!-- Content here -->
+    <div class="container-fluid">
+        
+        <div class="row">
+        <% subcategories.forEach(element => { %>
+            <% if(element[1].length >0){ %>
+             <div class="card-column col-lg-auto">
+                 <div class="short-card-body card-body">
+                     <div class="short-card card" >
+                         <div class="short-card-header card-header">
+                             <%=element[0]%>
+
+                         <%}%>
+                         </div>
+                         <ul class="list-group list-group-flush">
+                         <% element[1].forEach(item => {  %>
+                             <a href="/ads/<%=item.replace(/[/]/g,"-")%>" class="list-group-item"><%=item%></a>
+                         <% }); %>
+
+                         </ul>
+                     </div>
+                 </div>
+             </div>
+       <% });  %>
+            
+        </div>  
+    </div>
+    </div>
+<%- include('partials/footer') -%>
+ 
