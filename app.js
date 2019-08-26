@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const ejsLint = require('ejs-lint');
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 const client = require('socket.io').listen(4000).sockets;
 const _ = require("lodash");
+const session = require('express-session');
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 
@@ -14,14 +16,14 @@ let userID = null;
 let signinStatus = "signin";
 const pssd = process.env.PSSWD;
 
-console.log(pssd);
+// console.log(pssd);
 app.use(bodyParser.urlencoded({
     extended: true
 }));
  
-// mongoose.connect('mongodb://localhost:27017/craigslistDB', {
-let mongoConnectLink = "mongodb+srv://admin-terance:".concat(pssd).concat("@cluster0-u5arr.mongodb.net/picklistDB");
-    mongoose.connect(mongoConnectLink, {
+mongoose.connect('mongodb://localhost:27017/craigslistDB', {
+// let mongoConnectLink = "mongodb+srv://admin-terance:".concat(pssd).concat("@cluster0-u5arr.mongodb.net/picklistDB");
+    // mongoose.connect(mongoConnectLink, {
     useNewUrlParser: true
 });
 mongoose.set("useCreateIndex",true);
@@ -32,8 +34,43 @@ app.use(express.static("public/js"));
 app.set('view engine', 'ejs');
 // app.use(express.static(path.join(__dirname, 'public')));
 
+// Setting up session and passport 
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+const Schema = mongoose.Schema;
+
+// Creating the user Schema for user collection model
+const userSchema = new Schema({
+    username: String,
+    email: {
+        type: String,
+        index: {
+            unique: true,
+            dropDups: true
+        }
+    },
+    password: String,
+    ad_ids: [{
+        type: Schema.Types.ObjectId,
+        ref: 'ad'
+    }]
+});
+
+userSchema.plugin(passportLocalMongoose);
+
+const user = mongoose.model("user", userSchema);
+// **************************************************************
+
 // Creating the ad Schema and the ad collection model 
-const adSchema = {
+const adSchema = new Schema({
     phno: Number,
     category: String,
     subcategory: String,
@@ -43,37 +80,27 @@ const adSchema = {
     userId: { type: Schema.Types.ObjectId, ref: 'user' },
     chatId: { type: Schema.Types.ObjectId, ref: 'chat' },
     date: String
-};
+});
 
 const ad = mongoose.model("ad",adSchema);
 // *************************************************************
 
-// Creating the signup Schema for user collection model
-const signupSchema = {
-    username : String,
-    email : {type: String,index: {unique: true, dropDups: true}},
-    password: String,
-    ad_ids: [{ type: Schema.Types.ObjectId, ref: 'ad' }]
-};
-
-const user = mongoose.model("user",signupSchema);
-// **************************************************************
-
 // Creating the chat Schema 
-const messageSchema = {
+const messageSchema = new Schema({
     name: String,
     message: String
-};
+});
 
 const message = mongoose.model("message",messageSchema);
 
 // ****************************************************************
 
 // Creating the chatSchema
-const chatSchema = {
+const chatSchema = new Schema({
     adID : { type: Schema.Types.ObjectId, ref: 'ad',index: {unique: true, dropDups: true} },
     allchats: [messageSchema]
-}
+});
+
 const chat = mongoose.model("chat",chatSchema);
 
 // ******************************************************************
