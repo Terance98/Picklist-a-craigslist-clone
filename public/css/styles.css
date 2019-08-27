@@ -242,6 +242,28 @@ a{
     text-align: left;
 }
 
+.delete-button{
+     background-color: #ef4b4b !important;
+     border-color: #ef4b4b !important;
+
+}
+.delete-button:focus,.delete-button:active {
+   /* outline: none !important; */
+   outline: #ef4b4b !important;
+
+   box-shadow: none !important;
+   /* box-shadow: 3px 3px 3px #1abc9c !important; */
+}
+.delete-button:hover{
+    background-color: #c82121 !important;
+}
+.delete-button-form{
+    float:right; 
+    margin-left:10px;
+    position:absolute;
+    display: inline;
+}
+
  #messages{height:300px;}
         .scroll{
             overflow-y: scroll;

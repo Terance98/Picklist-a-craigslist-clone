@@ -31,8 +31,14 @@
   <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
+  <% if(signinStatus == "signout"){ %>
+    <li class="nav-item">
+        <a class="nav-link" href="/myads"> My Ads </a>
+      </li>
+  <% } %>
+  
   <li class="nav-item">
-        <a class="nav-link" href="/post">| Post Ad |</a>
+        <a class="nav-link" href="/post"> Post Ad </a>
       </li>
   <li class="nav-item">
         <a class="nav-link" href="/<%=signinStatus%>"><%="Sign ".concat(signinStatus.slice(4,))%></a>

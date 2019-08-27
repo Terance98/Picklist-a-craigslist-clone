@@ -1,30 +1,21 @@
 <%- include('partials/header') -%>
     <% details.forEach(element => { %>
-        // <form class = "details-container" action="/ad/details/<%=element[0]%>" method="get">
+        <form class = "details-container" action="/ad/details/<%=element[0]%>" method="get">
 
         <div class="big-card card ">
             <div class="card-header">
                 Featured
             </div>
             <div class="big-card-body card-body">
-            <form class = "details-container" action="/ad/details/<%=element[0]%>" method="get">
                 <h4 class="card-title"><%=element[1]%></h4>
                 <p class="card-text"><%=element[2].slice(0,100).concat("....")%></p>
                 <button type = "submit" class="btn btn-primary">More Details</button>
-            </form>    
-                <% if(deleteAd){  %>            
-             <form class = "delete-button-form details-container" action="/delete" method="post">
-                    <input type="hidden" id="adID" name="adID" value="<%=element[0]%>">
-                    <button type = "submit" class="btn btn-primary delete-button">Delete</button>
-
-            </form>
-                <% }  %>
-
             </div>
             <div class="card-footer text-muted">
                 <%=element[3]%>
             </div>
         </div>
+    </form>    
     <% });  %>
 <%- include('partials/footer') -%>
  

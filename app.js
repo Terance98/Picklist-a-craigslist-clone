@@ -259,7 +259,8 @@ app.get("/ads/:customSubCategory", function (req, res) {
             items = _.zipWith(...items, _.concat)
             res.render("details", {
                 signinStatus: req.session.signinStatus,
-                details: items
+                details: items,
+                deleteAd: false
             });
 
         }
@@ -346,47 +347,56 @@ app.get("/contact_us", function (req, res) {
     });
 });
 
+app.get("/myads", function(req, res){
 
+    ad.find({username: req.session.username}, function(err, docs){
+        if(err){
+            console.log(err);
+        }else{
+            // Getting the title and description values
+            var ids = _.map(docs, "_id");
+            var titles = _.map(docs, "title");
+            var description = _.map(docs, "description");
+            var date = _.map(docs, "date");
+            // Making a 2D array out of it 
+            var items = [ids, titles, description, date];
+            // Finding the transpose of the matrix, thereby making it to the format [title,description] of each value it items array  
+            items = _.zipWith(...items, _.concat)
+            res.render("details", {
+                signinStatus: req.session.signinStatus,
+                details: items,
+                deleteAd: true
+            });
+
+        }
+    });
+
+});
 
 // ***********Getting all POST requests*****************
 
 
 app.post("/signin", function(req, res){
-//     const emailID = req.body.emailid;
-//     const password = req.body.password;
 
-//     user.findOne({email: emailID, password: password}, function(err, foundList){
-//         if(err){
-//             console.log(err);
-//         }
-//         else{
-//             if(foundList){
-//                 userID = foundList.id;
-//                 res.redirect("/");
-//             }
-//             else{
-//                 res.redirect("/signin");
+    const newuser = new user({
+        username: req.body.username,
+        password: req.body.password
+    });
 
-//             }
-           
-//         }
-//     });
-const newuser = new user({
-    username: req.body.username,
-    password: req.body.password
-});
-
-req.login(newuser, function (err, user) {
-    if (err) {
-        console.log(err);
-    } else {
-        passport.authenticate("local")(req, res, function () {
-            // var id = user.id;
-            req.session.username = req.body.username;
-            res.redirect("/");
-        });
-    }
-});
+    req.login(newuser, function (err, user) {
+        if (err) {
+            console.log(err);
+            res.redirect("/signin");
+        } else {
+            passport.authenticate("local")(req, res, function(err) {
+                // var id = user.id;
+                req.session.username = req.body.username;
+                res.redirect("/");
+                
+            });
+         
+        }
+    });
 
 });
 
@@ -397,28 +407,19 @@ app.post("/signup", function(req,res){
     const personName = req.body.person_name;
     const password = req.body.password;
 
-    // const newUser = new user({
-    //     username: username,
-    //     email: email,
-    //     password: password,
-    //     ad_ids: []
-
-    // });
-
-    // Handle to error here when duplication occours.......
-    // user.create(newUser,function(err,insertedDoc){
-    //     if(err){
-    //         console.log(err);
-    //     }
-    // });
     user.register({username: username, personName: personName, ad_ids:[]},password,function(err, user){
         if(err){
             console.log(err);
             res.redirect("/signup");
         }else{
-            passport.authenticate("local")(req, res, function(){
+            passport.authenticate("local")(req, res, function(err){
+                if(err){
+                    res.redirect("/signup");
+                }else{
                 req.session.username = username;
                 res.redirect("/");
+
+                }
             });
         }
     });
@@ -437,10 +438,6 @@ app.post("/post", function(req, res){
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date+' '+time;
-
-
-    // Try to add date and time too also write it also to the DB.
-
 
     const newAd = new ad({
         phno: phno,
@@ -517,10 +514,20 @@ app.post("/ad/details", function(req,res){
     
 });
 
+app.post("/delete", function(req,res){
+    ad.deleteOne({
+        _id:req.body.adID}, function(err, item){
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect("/myads");
+            }
+        });
+});
 
 
-app.listen(5000, function (err) {
-    console.log("Server has started at port 5000");
+app.listen(3000, function (err) {
+    console.log("Server has started at port 3000");
 });
 
 
