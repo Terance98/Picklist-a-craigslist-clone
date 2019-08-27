@@ -12,7 +12,7 @@
             </div>
             <div class="card-footer text-muted">
                 <!-- 2 days ago -->
-                <p>Posted by <%=adUser%></p>
+                <p>Posted by <%=userData.personName%></p>
                 <p>Email: <%=adData.username%></p>
                 <p>Phone no:  <%=adData.phno%></p>
                 <p>Address:  <%=adData.address%></p>
@@ -24,7 +24,7 @@
         <form method = "post" action = "/ad/details">
                 <h1 class="text-center">
                     Chat 
-                    <% if(adUser == name){ %>
+                    <% if(userData.id == userId){ %>
                         <button type = "submit"  id="clear" class="btn btn-danger" value = "no" name = clear onclick = toggleClear();>Clear</button>  
                     <% }else{ %>
                         <button  style="display:none;" id="clear" class="btn btn-danger" value = "no">Clear</button>  

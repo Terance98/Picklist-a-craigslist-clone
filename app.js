@@ -294,7 +294,7 @@ app.get("/ad/details/:adID", function (req, res) {
                                         res.render("description", {
                                             signinStatus: signinStatus,
                                             adData: foundAd,
-                                            adUser: foundUser.personName,
+                                            userData: foundUser,
                                             chatData: foundChat,
                                             name: user.personName,
                                             userId: user.id
@@ -308,7 +308,7 @@ app.get("/ad/details/:adID", function (req, res) {
                                         res.render("description", {
                                             signinStatus: signinStatus,
                                             adData: foundAd,
-                                            adUser: foundUser.personName,
+                                            userData: foundUser,
                                             chatData: null,
                                             name: user.personName,
                                             userId: user.id
