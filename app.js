@@ -373,6 +373,12 @@ app.get("/myads", function(req, res){
 
 });
 
+app.get("/terms",function(req,res){
+    res.render("terms",{
+        signinStatus: req.session.signinStatus
+    });
+});
+
 // ***********Getting all POST requests*****************
 
 
