@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const ejsLint = require('ejs-lint');
 const mongoose = require("mongoose");
-// const client = require('socket.io').listen(4000).sockets;
 const _ = require("lodash");
 const session = require('express-session');
 const passport = require("passport");
@@ -12,8 +11,6 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 
-// let userID = null;
-// let signinStatus = "signin";
 const pssd = process.env.PSSWD;
 
 // console.log(pssd);
@@ -44,7 +41,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 const Schema = mongoose.Schema;
 
 // Creating the user Schema for user collection model
@@ -66,8 +62,6 @@ const userSchema = new Schema({
 userSchema.plugin(passportLocalMongoose);
 const user = mongoose.model("user", userSchema);
 
-
-
 // Creating the ad Schema and the ad collection model 
 const adSchema = new Schema({
     phno: Number,
@@ -82,16 +76,13 @@ const adSchema = new Schema({
 });
 const ad = mongoose.model("ad",adSchema);
 
-
-
 // Creating the message Schema 
 const messageSchema = new Schema({
     name: String,
     message: String
 });
-
 const message = mongoose.model("message",messageSchema);
-
+// ************************************************************
 
 
 // Creating the chatSchema
@@ -99,19 +90,13 @@ const chatSchema = new Schema({
     adID : { type: Schema.Types.ObjectId, ref: 'ad',index: {unique: true, dropDups: true} },
     allchats: [messageSchema]
 });
-
 const chat = mongoose.model("chat",chatSchema);
-
+// *******************************************************
 
 passport.use(user.createStrategy());
-
-// passport.serializeUser(user.serializeUser());
-// passport.deserializeUser(user.deserializeUser()); 
-
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
-
 passport.deserializeUser(function (user, done) {
     done(null, user);
 });
@@ -120,7 +105,7 @@ passport.deserializeUser(function (user, done) {
 // ***************Getting all GET requests****************
 
 app.get("/", function (req, res) {
-
+    // Fetch all the ad data and format it 
     req.session.signinStatus = "signin";
     ad.find({}, function (err, docs) {
         var serviceIndexes = _.keys(_.pickBy(docs, {
@@ -204,6 +189,7 @@ app.get("/", function (req, res) {
 
 });
 
+// Getting the sign up page 
 app.get("/signup", function(req, res){
     res.render("signup",{
         signinStatus: req.session.signinStatus
@@ -211,6 +197,7 @@ app.get("/signup", function(req, res){
     
 });
 
+// Getting the sign in page 
 app.get("/signin", function (req, res) {
     res.render("signin", {
         signinStatus: req.session.signinStatus
@@ -218,6 +205,7 @@ app.get("/signin", function (req, res) {
 
 });
 
+// Handling the sign out request
 app.get("/signout", function (req, res) {
     // userID = null;
     req.logout();
@@ -225,17 +213,18 @@ app.get("/signout", function (req, res) {
     res.redirect("/");
 })
 
+// Getting the Ad post page 
 app.get("/post", function (req, res) {
     if (req.isAuthenticated()) {
         res.render("post", {
             signinStatus: req.session.signinStatus
         });
-
     } else {
         res.redirect("/signin");
     }
 });
 
+// Fetch all the ads corresponding to the chosen subcategory 
 app.get("/ads/:customSubCategory", function (req, res) {
     // Reformating the text for querying
     var subCategory = _.replace(req.params.customSubCategory, new RegExp("%20", "g"), " ");
@@ -246,7 +235,6 @@ app.get("/ads/:customSubCategory", function (req, res) {
     }, function (err, docs) {
         if (err) {
             console.log(err);
-
         } else {
             // Getting the title and description values
             var ids = _.map(docs, "_id");
@@ -262,30 +250,34 @@ app.get("/ads/:customSubCategory", function (req, res) {
                 details: items,
                 deleteAd: false
             });
-
         }
-
     });
-
 });
+
+// Fetching the Ad and necessary data items associated with it  
 app.get("/ad/details/:adID", function (req, res) {
+    // Check if the user is authenticated 
     if (req.isAuthenticated()) {
         var id = req.params.adID;
+        // Find an ad with the ID passed as request parameter 
         ad.findOne({
             _id: id
         }, function (err, foundAd) {
             if (err) {
                 console.log(err);
             } else {
+                // Find the user who posted that Ad 
                 user.findOne({
                     username: foundAd.username
                 }, function (err, foundUser) {
                     if (!err) {
+                        // Fetch all the chats associated with the ad 
                         chat.findOne({
                             adID: id
                         }, function (err, foundChat) {
                             if (!err) {
                                 if (foundChat) {
+                                    // Pass the chat messages if chats are found
                                     user.findOne({
                                         username: req.session.username
                                     }, function (err, user) {
@@ -300,6 +292,7 @@ app.get("/ad/details/:adID", function (req, res) {
                                     });
 
                                 } else {
+                                    // If there is are no chats, pass all other values with chat passed as null 
                                     user.findOne({
                                         username: req.session.username
                                     }, function (err, user) {
@@ -313,20 +306,40 @@ app.get("/ad/details/:adID", function (req, res) {
                                         });
                                     });
                                 }
-
                             }
-
                         });
-
                     }
                 });
-
             }
         });
-
     } else {
+        // If the user was found not logged in  
         res.redirect("/signin");
     }
+});
+
+// Fetch the user's ads 
+app.get("/myads", function(req, res){
+    ad.find({username: req.session.username}, function(err, docs){
+        if(err){
+            console.log(err);
+        }else{
+            // Getting the title and description values
+            var ids = _.map(docs, "_id");
+            var titles = _.map(docs, "title");
+            var description = _.map(docs, "description");
+            var date = _.map(docs, "date");
+            // Making a 2D array out of it 
+            var items = [ids, titles, description, date];
+            // Finding the transpose of the matrix, thereby making it to the format [title,description] of each value it items array  
+            items = _.zipWith(...items, _.concat)
+            res.render("details", {
+                signinStatus: req.session.signinStatus,
+                details: items,
+                deleteAd: true
+            });
+        }
+    });
 });
 
 app.get("/about", function (req, res) {
@@ -347,32 +360,6 @@ app.get("/contact_us", function (req, res) {
     });
 });
 
-app.get("/myads", function(req, res){
-
-    ad.find({username: req.session.username}, function(err, docs){
-        if(err){
-            console.log(err);
-        }else{
-            // Getting the title and description values
-            var ids = _.map(docs, "_id");
-            var titles = _.map(docs, "title");
-            var description = _.map(docs, "description");
-            var date = _.map(docs, "date");
-            // Making a 2D array out of it 
-            var items = [ids, titles, description, date];
-            // Finding the transpose of the matrix, thereby making it to the format [title,description] of each value it items array  
-            items = _.zipWith(...items, _.concat)
-            res.render("details", {
-                signinStatus: req.session.signinStatus,
-                details: items,
-                deleteAd: true
-            });
-
-        }
-    });
-
-});
-
 app.get("/terms",function(req,res){
     res.render("terms",{
         signinStatus: req.session.signinStatus
@@ -381,7 +368,7 @@ app.get("/terms",function(req,res){
 
 // ***********Getting all POST requests*****************
 
-
+// Signing in a user 
 app.post("/signin", function(req, res){
 
     const newuser = new user({
@@ -398,16 +385,12 @@ app.post("/signin", function(req, res){
                 // var id = user.id;
                 req.session.username = req.body.username;
                 res.redirect("/");
-                
             });
-         
         }
     });
-
 });
 
-
-
+// Signing up a new user 
 app.post("/signup", function(req,res){
     const username = req.body.username;
     const personName = req.body.person_name;
@@ -429,10 +412,9 @@ app.post("/signup", function(req,res){
             });
         }
     });
-
 });
 
-
+// Posting the Ad data items to the database
 app.post("/post", function(req, res){
     const phno = req.body.phno;
     const category = req.body.category;
@@ -466,14 +448,12 @@ app.post("/post", function(req, res){
         });
 });
 
-
-
+// Getting the chat messages, storing them to the DB, and delete operations on chat messages
 app.post("/ad/details", function(req,res){
     var id = req.body.adID;
     var name = req.body.username;
     var message = req.body.message;
     var clear = req.body.clear;
-    // console.log(id);
     if(clear!="yes"){
         const newMessage = {
         name: name,
@@ -496,7 +476,6 @@ app.post("/ad/details", function(req,res){
                     var redirectLink = "/ad/details/".concat(id);
                         res.redirect(redirectLink);
                 });
-                
             }else{
                 var redirectLink = "/ad/details/".concat(id);
                         res.redirect(redirectLink);
@@ -520,6 +499,7 @@ app.post("/ad/details", function(req,res){
     
 });
 
+// User deleting his/her ad
 app.post("/delete", function(req,res){
     ad.deleteOne({
         _id:req.body.adID}, function(err, item){
@@ -531,7 +511,7 @@ app.post("/delete", function(req,res){
         });
 });
 
-
+// Setting up listening port 
 app.listen(3000, function (err) {
     console.log("Server has started at port 3000");
 });
