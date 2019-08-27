@@ -21,7 +21,6 @@
                          <div class="short-card-header card-header">
                              <%=element[0]%>
 
-                         <%}%>
                          </div>
                          <ul class="list-group list-group-flush">
                          <% element[1].forEach(item => {  %>
@@ -32,9 +31,12 @@
                      </div>
                  </div>
              </div>
+            <%}%>
+
        <% });  %>
             
         </div>  
+    </div>
     </div>
     </div>
 <%- include('partials/footer') -%>
