@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const ejsLint = require('ejs-lint');
 const mongoose = require("mongoose");
-const client = require('socket.io').listen(4000).sockets;
+// const client = require('socket.io').listen(4000).sockets;
 const _ = require("lodash");
 const session = require('express-session');
 const passport = require("passport");
@@ -49,8 +49,8 @@ const Schema = mongoose.Schema;
 
 // Creating the user Schema for user collection model
 const userSchema = new Schema({
-    username: String,
-    email: {
+    personName: String,
+    username: {
         type: String,
         index: {
             unique: true,
@@ -105,8 +105,16 @@ const chat = mongoose.model("chat",chatSchema);
 
 passport.use(user.createStrategy());
 
-passport.serializeUser(user.serializeUser());
-passport.deserializeUser(user.deserializeUser());
+// passport.serializeUser(user.serializeUser());
+// passport.deserializeUser(user.deserializeUser()); 
+
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+    done(null, user);
+});
 
 
 // ***************Getting all GET requests****************
@@ -344,25 +352,41 @@ app.get("/contact_us", function (req, res) {
 
 
 app.post("/signin", function(req, res){
-    const emailID = req.body.emailid;
-    const password = req.body.password;
+//     const emailID = req.body.emailid;
+//     const password = req.body.password;
 
-    user.findOne({email: emailID, password: password}, function(err, foundList){
-        if(err){
-            console.log(err);
-        }
-        else{
-            if(foundList){
-                userID = foundList.id;
-                res.redirect("/");
-            }
-            else{
-                res.redirect("/signin");
+//     user.findOne({email: emailID, password: password}, function(err, foundList){
+//         if(err){
+//             console.log(err);
+//         }
+//         else{
+//             if(foundList){
+//                 userID = foundList.id;
+//                 res.redirect("/");
+//             }
+//             else{
+//                 res.redirect("/signin");
 
-            }
+//             }
            
-        }
-    });
+//         }
+//     });
+const newuser = new user({
+    username: req.body.username,
+    password: req.body.password
+});
+
+req.login(newuser, function (err, user) {
+    if (err) {
+        console.log(err);
+    } else {
+        passport.authenticate("local")(req, res, function () {
+            // var id = user.id;
+            req.session.email = req.body.username;
+            res.redirect("/");
+        });
+    }
+});
 
 });
 
@@ -370,16 +394,16 @@ app.post("/signin", function(req, res){
 
 app.post("/signup", function(req,res){
     const username = req.body.username;
-    const email = req.body.emailid;
+    const personName = req.body.person_name;
     const password = req.body.password;
 
-    const newUser = new user({
-        username: username,
-        email: email,
-        password: password,
-        ad_ids: []
+    // const newUser = new user({
+    //     username: username,
+    //     email: email,
+    //     password: password,
+    //     ad_ids: []
 
-    });
+    // });
 
     // Handle to error here when duplication occours.......
     // user.create(newUser,function(err,insertedDoc){
@@ -387,13 +411,13 @@ app.post("/signup", function(req,res){
     //         console.log(err);
     //     }
     // });
-    user.register({username: username, email: email, ad_ids:[]},password,function(err, user){
+    user.register({username: username, personName: personName, ad_ids:[]},password,function(err, user){
         if(err){
             console.log(err);
             res.redirect("/signup");
         }else{
             passport.authenticate("local")(req, res, function(){
-                req.session.email = email;
+                req.session.email = username;
                 res.redirect("/");
             });
         }
