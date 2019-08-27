@@ -13,7 +13,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const app = express();
 
 // let userID = null;
-let signinStatus = "signin";
+// let signinStatus = "signin";
 const pssd = process.env.PSSWD;
 
 // console.log(pssd);
@@ -120,9 +120,8 @@ passport.deserializeUser(function (user, done) {
 // ***************Getting all GET requests****************
 
 app.get("/", function (req, res) {
-    if(req.isAuthenticated()){
-        console.log(req.session.username);
-    }
+
+    req.session.signinStatus = "signin";
     ad.find({}, function (err, docs) {
         var serviceIndexes = _.keys(_.pickBy(docs, {
             category: "Services"
@@ -190,14 +189,14 @@ app.get("/", function (req, res) {
         ];
 
         if (req.isAuthenticated()) {
-            signinStatus = "signout";
+            req.session.signinStatus = "signout";
             res.render("index", {
-                signinStatus: signinStatus,
+                signinStatus: req.session.signinStatus,
                 subcategories: allSubCategories
             });
         } else {
             res.render("index", {
-                signinStatus: signinStatus,
+                signinStatus: req.session.signinStatus,
                 subcategories: allSubCategories
             });
         }
@@ -207,14 +206,14 @@ app.get("/", function (req, res) {
 
 app.get("/signup", function(req, res){
     res.render("signup",{
-        signinStatus: signinStatus
+        signinStatus: req.session.signinStatus
     });
     
 });
 
 app.get("/signin", function (req, res) {
     res.render("signin", {
-        signinStatus: signinStatus
+        signinStatus: req.session.signinStatus
     });
 
 });
@@ -222,14 +221,14 @@ app.get("/signin", function (req, res) {
 app.get("/signout", function (req, res) {
     // userID = null;
     req.logout();
-    signinStatus = "signin";
+    req.session.signinStatus = "signin";
     res.redirect("/");
 })
 
 app.get("/post", function (req, res) {
     if (req.isAuthenticated()) {
         res.render("post", {
-            signinStatus: signinStatus
+            signinStatus: req.session.signinStatus
         });
 
     } else {
@@ -259,7 +258,7 @@ app.get("/ads/:customSubCategory", function (req, res) {
             // Finding the transpose of the matrix, thereby making it to the format [title,description] of each value it items array  
             items = _.zipWith(...items, _.concat)
             res.render("details", {
-                signinStatus: signinStatus,
+                signinStatus: req.session.signinStatus,
                 details: items
             });
 
@@ -277,12 +276,10 @@ app.get("/ad/details/:adID", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(foundAd);
                 user.findOne({
                     username: foundAd.username
                 }, function (err, foundUser) {
                     if (!err) {
-                        console.log(foundUser);
                         chat.findOne({
                             adID: id
                         }, function (err, foundChat) {
@@ -292,7 +289,7 @@ app.get("/ad/details/:adID", function (req, res) {
                                         username: req.session.username
                                     }, function (err, user) {
                                         res.render("description", {
-                                            signinStatus: signinStatus,
+                                            signinStatus: req.session.signinStatus,
                                             adData: foundAd,
                                             userData: foundUser,
                                             chatData: foundChat,
@@ -306,7 +303,7 @@ app.get("/ad/details/:adID", function (req, res) {
                                         username: req.session.username
                                     }, function (err, user) {
                                         res.render("description", {
-                                            signinStatus: signinStatus,
+                                            signinStatus: req.session.signinStatus,
                                             adData: foundAd,
                                             userData: foundUser,
                                             chatData: null,
@@ -333,19 +330,19 @@ app.get("/ad/details/:adID", function (req, res) {
 
 app.get("/about", function (req, res) {
     res.render('about', {
-        signinStatus: signinStatus,
+        signinStatus: req.session.signinStatus,
     });
 });
 
 app.get("/services", function (req, res) {
     res.render('services', {
-        signinStatus: signinStatus,
+        signinStatus: req.session.signinStatus,
     });
 });
 
 app.get("/contact_us", function (req, res) {
     res.render('contact_us', {
-        signinStatus: signinStatus,
+        signinStatus: req.session.signinStatus,
     });
 });
 
@@ -525,5 +522,6 @@ app.post("/ad/details", function(req,res){
 app.listen(5000, function (err) {
     console.log("Server has started at port 5000");
 });
+
 
 
