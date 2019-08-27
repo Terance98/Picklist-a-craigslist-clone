@@ -8,11 +8,9 @@ html, body {
 }
 
 a{
-  /* color:#5E5E5E !important; */
   color:#333333 !important;
 }
 
-/* Change input box focus syle */ 
 .form-control:focus {
         border-color: #1abc9c;
         box-shadow: 0px 1px 1px #1abc9c;
@@ -24,15 +22,13 @@ a{
      border-color: #1abc9c !important;
      margin-bottom:20px;
      margin-top:20px;
-
 }
+
 .btn:focus,.btn:active {
-   /* outline: none !important; */
    outline: rgb(26,200,156) !important;
-
    box-shadow: none !important;
-   /* box-shadow: 3px 3px 3px #1abc9c !important; */
 }
+
 .btn:hover{
     background-color: rgb(20,150,136) !important;
 }
@@ -44,10 +40,8 @@ a{
 
 
 .card-column, .row{
-        padding:0;
-        /* width: 100%;
-        margin: auto; */
-    }
+    padding:0;
+}
 
 .content{
     width:75%;
@@ -65,7 +59,6 @@ a{
     margin-top: 70px;
     background-color:white;
     margin-right:50px;
-    /* display:inline-block; */
 }
 
 .vertical-menu a {
@@ -91,9 +84,7 @@ a{
 }
 
 .short-card-header{
-    /* background-color: #00adb5; */  
     background-color: #1abc9c !important;
-    /* background-color: #00818a !important; */
 }
 
 .short-card-body{
@@ -165,16 +156,14 @@ a{
 /* ***************************************** */
 
 /* Header Sytling */
-
 .navbar-brand:hover {
-  transform: scale(1.02); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  transform: scale(1.02); 
 }
 
 .navbar-brand{
   color:#5E5E5E !important;
   font-family: 'Nova Mono', monospace;
   font-size: 30px;
-  /* margin-left:100px; */
   padding-left:0;
 }
 
@@ -194,34 +183,15 @@ a{
 .navbar-nav li a:hover {
   color: #1abc9c !important;
 }
+
 .navbar-nav li a {
-  /* color: #1abc9c !important; */
   font-size: 1.2rem;
   color:#5E5E5E !important;
   font-family: 'Nova Mono', monospace;
   letter-spacing: normal;
-  
-
 }
 
-/*.navbar-nav{
-  color: #1abc9c !important;
-  float:right;
-  postition: relative;
-}
-*/
-
-
-/* ********************************************** */
-
-/* Form Sytling */
-/* form{ */
-        /* width : 400px; */
-        /* margin : 10px auto; */
-            /* padding-bootom: 0; */
-    /* } */
 #inputUsername,#inputEmail,#inputPassword{
-    /* padding: 40px auto; */
     height:60px;
 }
 /* ******************************************** */
@@ -229,8 +199,6 @@ a{
 .input-form{
     max-width:600px;
     margin:auto;
-    
-
 }
 
 
@@ -245,18 +213,20 @@ a{
 .delete-button{
      background-color: #ef4b4b !important;
      border-color: #ef4b4b !important;
+     position:absolute;
+     left:120px;
+     bottom:0;
 
 }
 .delete-button:focus,.delete-button:active {
-   /* outline: none !important; */
    outline: #ef4b4b !important;
-
    box-shadow: none !important;
-   /* box-shadow: 3px 3px 3px #1abc9c !important; */
 }
+
 .delete-button:hover{
     background-color: #c82121 !important;
 }
+
 .delete-button-form{
     float:right; 
     margin-left:10px;
@@ -264,10 +234,13 @@ a{
     display: inline;
 }
 
- #messages{height:300px;}
-        .scroll{
-            overflow-y: scroll;
-        }
+#messages{
+    height:300px;
+}
+
+.scroll{
+    overflow-y: scroll;
+}
 
 @media only screen and (max-width: 700px) {
     .vertical-menu{
@@ -275,23 +248,19 @@ a{
         display:none;
         margin:0;
     }
-    .card-body,.card-column, .row{
-        padding:0;
-        /* margin: auto !important; */
-    }
-    .container-fluid{
-        /* margin-left:0 !important; */
-        padding:0;
 
+    .card-body, .card-column, .row, .container-fluid{
+        padding:0;
     }
+
     .card-column{
         margin:20px 0;
     }
     .content{
         width:87%;
-        /* margin-right:10%; */
         margin:auto;
     }
+
     .details-container{
         width:97%;
         margin:auto;
@@ -303,9 +272,9 @@ a{
     .description-col{
         padding:30px 0;
     }
+
     .big-card{
         margin:50px auto;
         width: 97%;
-
     }
 }
