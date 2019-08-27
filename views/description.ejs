@@ -12,8 +12,8 @@
             </div>
             <div class="card-footer text-muted">
                 <!-- 2 days ago -->
-                <p>Posted by <%=userData.username%></p>
-                <p>Email: <%=userData.email%></p>
+                <p>Posted by <%=adUser%></p>
+                <p>Email: <%=adData.username%></p>
                 <p>Phone no:  <%=adData.phno%></p>
                 <p>Address:  <%=adData.address%></p>
             </div>
@@ -24,7 +24,7 @@
         <form method = "post" action = "/ad/details">
                 <h1 class="text-center">
                     Chat 
-                    <% if(userId == adData.userId){ %>
+                    <% if(adUser == name){ %>
                         <button type = "submit"  id="clear" class="btn btn-danger" value = "no" name = clear onclick = toggleClear();>Clear</button>  
                     <% }else{ %>
                         <button  style="display:none;" id="clear" class="btn btn-danger" value = "no">Clear</button>  

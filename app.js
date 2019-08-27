@@ -12,7 +12,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 
-let userID = null;
+// let userID = null;
 let signinStatus = "signin";
 const pssd = process.env.PSSWD;
 
@@ -76,7 +76,7 @@ const adSchema = new Schema({
     title: String,
     description:String,
     address:String,
-    userId: { type: Schema.Types.ObjectId, ref: 'user' },
+    username: { type: String, ref: 'user' },
     chatId: { type: Schema.Types.ObjectId, ref: 'chat' },
     date: String
 });
@@ -121,7 +121,7 @@ passport.deserializeUser(function (user, done) {
 
 app.get("/", function (req, res) {
     if(req.isAuthenticated()){
-        console.log(req.session.email);
+        console.log(req.session.username);
     }
     ad.find({}, function (err, docs) {
         var serviceIndexes = _.keys(_.pickBy(docs, {
@@ -189,7 +189,7 @@ app.get("/", function (req, res) {
             ["Temp jobs", tempjobsSubCategories]
         ];
 
-        if (userID) {
+        if (req.isAuthenticated()) {
             signinStatus = "signout";
             res.render("index", {
                 signinStatus: signinStatus,
@@ -220,13 +220,14 @@ app.get("/signin", function (req, res) {
 });
 
 app.get("/signout", function (req, res) {
-    userID = null;
+    // userID = null;
+    req.logout();
     signinStatus = "signin";
     res.redirect("/");
 })
 
 app.get("/post", function (req, res) {
-    if (userID) {
+    if (req.isAuthenticated()) {
         res.render("post", {
             signinStatus: signinStatus
         });
@@ -268,7 +269,7 @@ app.get("/ads/:customSubCategory", function (req, res) {
 
 });
 app.get("/ad/details/:adID", function (req, res) {
-    if (userID) {
+    if (req.isAuthenticated()) {
         var id = req.params.adID;
         ad.findOne({
             _id: id
@@ -276,39 +277,41 @@ app.get("/ad/details/:adID", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
+                console.log(foundAd);
                 user.findOne({
-                    _id: foundAd.userId
+                    username: foundAd.username
                 }, function (err, foundUser) {
                     if (!err) {
+                        console.log(foundUser);
                         chat.findOne({
                             adID: id
                         }, function (err, foundChat) {
                             if (!err) {
                                 if (foundChat) {
                                     user.findOne({
-                                        _id: userID
+                                        username: req.session.username
                                     }, function (err, user) {
                                         res.render("description", {
                                             signinStatus: signinStatus,
                                             adData: foundAd,
-                                            userData: foundUser,
+                                            adUser: foundUser.personName,
                                             chatData: foundChat,
-                                            name: user.username,
-                                            userId: userID
+                                            name: user.personName,
+                                            userId: user.id
                                         });
                                     });
 
                                 } else {
                                     user.findOne({
-                                        _id: userID
+                                        username: req.session.username
                                     }, function (err, user) {
                                         res.render("description", {
                                             signinStatus: signinStatus,
                                             adData: foundAd,
-                                            userData: foundUser,
+                                            adUser: foundUser.personName,
                                             chatData: null,
-                                            name: user.username,
-                                            userId: userID
+                                            name: user.personName,
+                                            userId: user.id
                                         });
                                     });
                                 }
@@ -382,7 +385,7 @@ req.login(newuser, function (err, user) {
     } else {
         passport.authenticate("local")(req, res, function () {
             // var id = user.id;
-            req.session.email = req.body.username;
+            req.session.username = req.body.username;
             res.redirect("/");
         });
     }
@@ -417,13 +420,12 @@ app.post("/signup", function(req,res){
             res.redirect("/signup");
         }else{
             passport.authenticate("local")(req, res, function(){
-                req.session.email = username;
+                req.session.username = username;
                 res.redirect("/");
             });
         }
     });
 
-    // res.redirect("/");
 });
 
 
@@ -450,13 +452,13 @@ app.post("/post", function(req, res){
         title: title,
         description: description,
         address: address,
-        userId: userID,
+        username: req.session.username,
         chatId: null,
         date: dateTime
     });
 
     ad.create(newAd, function(err,docsInserted){
-        user.findOne({_id: userID}, function(err, foundList){
+        user.findOne({username: req.session.username}, function(err, foundList){
             foundList.ad_ids.push(docsInserted._id);
             foundList.save();
             res.redirect("/");
