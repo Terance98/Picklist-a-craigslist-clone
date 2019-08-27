@@ -13,17 +13,17 @@ const app = express();
 
 const pssd = process.env.PSSWD;
 
-// console.log(pssd);
 app.use(bodyParser.urlencoded({
     extended: true
 }));
  
-mongoose.connect('mongodb://localhost:27017/craigslistDB', {
-// let mongoConnectLink = "mongodb+srv://admin-terance:".concat(pssd).concat("@cluster0-u5arr.mongodb.net/picklistDB");
-    // mongoose.connect(mongoConnectLink, {
+// mongoose.connect('mongodb://localhost:27017/craigslistDB', {
+let mongoConnectLink = "mongodb+srv://admin-terance:".concat(pssd).concat("@cluster0-u5arr.mongodb.net/picklistDB");
+    mongoose.connect(mongoConnectLink, {
     useNewUrlParser: true
 });
 mongoose.set("useCreateIndex",true);
+// mongoose.set('useFindAndModify', false);
 
 
 app.use(express.static("public/css"));
@@ -512,9 +512,11 @@ app.post("/delete", function(req,res){
 });
 
 // Setting up listening port 
-app.listen(3000, function (err) {
-    console.log("Server has started at port 3000");
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 3000;
+}
+
+app.listen(port, function () {
+    console.log("Server has started successfully at port 3000");
 });
-
-
-
