@@ -191,6 +191,9 @@ app.get("/", function (req, res) {
 
 // Getting the sign up page 
 app.get("/signup", function(req, res){
+     if(!req.session.signinStatus){
+        req.session.signinStatus = "signin";
+    }
     res.render("signup",{
         signinStatus: req.session.signinStatus
     });
@@ -199,6 +202,9 @@ app.get("/signup", function(req, res){
 
 // Getting the sign in page 
 app.get("/signin", function (req, res) {
+    if(!req.session.signinStatus){
+        req.session.signinStatus = "signin";
+    }
     res.render("signin", {
         signinStatus: req.session.signinStatus
     });
@@ -370,7 +376,7 @@ app.get("/terms",function(req,res){
 
 // Signing in a user 
 app.post("/signin", function(req, res){
-
+    
     const newuser = new user({
         username: req.body.username,
         password: req.body.password
