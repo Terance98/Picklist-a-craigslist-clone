@@ -520,9 +520,9 @@ app.post("/delete", function(req,res){
 // Setting up listening port 
 let port = process.env.PORT;
 if (port == null || port == "") {
-    port = 3000;
+    port = 8080;
 }
 
 app.listen(port, function () {
-    console.log("Server has started successfully at port 3000");
+    console.log("Server has started successfully at port 8080");
 });
